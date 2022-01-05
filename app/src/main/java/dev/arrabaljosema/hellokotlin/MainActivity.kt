@@ -22,7 +22,11 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
     }
 
     private fun speak() {
-        var message: String = findViewById<TextView>(R.id.main_textToPlay_textView).text.toString()
+        var message: String = findViewById<TextView>(R.id.main_userText_editText).text.toString()
+        if (message.isEmpty()){
+            findViewById<TextView>(R.id.main_textToPlay_textView).text = "Has olvidado introducir un texto"
+            message="Si no escribes nada no sabría que decirte"
+        }
         tts!!.speak(message, TextToSpeech.QUEUE_FLUSH, null, "")
     }
 
@@ -33,5 +37,13 @@ class MainActivity : AppCompatActivity(), TextToSpeech.OnInitListener {
         } else {
             findViewById<TextView>(R.id.main_textToPlay_textView).text = "No disponible :("
         }
+    }
+
+    override fun onDestroy() {
+        if (tts != null) {
+            tts!!.stop()
+            tts!!.shutdown()
+        }
+        super.onDestroy()
     }
 }
